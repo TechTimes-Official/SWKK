@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWKK – Wir bewegen Kempen!</title>
+  <meta name="description" content="SWKK – Wir bewegen Kempen! Fahrpläne, Liniennetz, Tickets, E-Bus-Flotte und aktuelle Verkehrsmeldungen für Kempen und Umgebung." />
+
+  <!-- =====================================================================
+       SCHRIFTART: OPEN SANS (Google Fonts)
+       ===================================================================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================================
+       1. DESIGN-SYSTEM & VARIABLEN (:root)
+       Hier kannst du alle Farben, Verläufe, Schriftgrößen und Abstände 
+       zentral für die gesamte Website anpassen!
+       ===================================================================== */
+    :root {
+      /* --- SWKK Regenbogen-Markenfarben (aus Logo & Bus-Muster) --- */
+      --swkk-red: #E31E24;
+      --swkk-orange: #F39200;
+      --swkk-yellow: #FFCC00;
+      --swkk-green: #008D36;
+      --swkk-teal: #008A7C;
+      --swkk-blue: #007BC4;
+      --swkk-violet: #3F2A85;
+
+      /* --- Regenbogen-Farbverläufe --- */
+      --gradient-rainbow: linear-gradient(
+        90deg,
+        var(--swkk-red) 0%,
+        var(--swkk-orange) 17%,
+        var(--swkk-yellow) 34%,
+        var(--swkk-green) 51%,
+        var(--swkk-teal) 68%,
+        var(--swkk-blue) 84%,
+        var(--swkk-violet) 100%
+      );
+
+      /* Sanfter Hintergrund-Schimmer für Hero & Akzentflächen */
+      --gradient-rainbow-soft: linear-gradient(
+        135deg,
+        rgba(227, 30, 36, 0.06) 0%,
+        rgba(243, 146, 0, 0.06) 20%,
+        rgba(255, 204, 0, 0.07) 40%,
+        rgba(0, 141, 54, 0.06) 60%,
+        rgba(0, 123, 196, 0.07) 80%,
+        rgba(63, 42, 133, 0.08) 100%
+      );
+
+      /* --- Neutrale Basis- & Textfarben --- */
+      --color-bg: #F8FAFC;
+      --color-surface: #FFFFFF;
+      --color-surface-alt: #F1F5F9;
+      --color-text: #111827;
+      --color-text-muted: #4B5563;
+      --color-border: #E2E8F0;
+
+      /* --- Primäre Interaktionsfarben (Buttons, Links, Fokus) --- */
+      --color-primary: var(--swkk-blue);
+      --color-primary-hover: #00629B;
+      --color-accent: var(--swkk-green);
+      --color-dark: #0F172A;
+
+      /* --- Typografie --- */
+      --font-family-base: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-size-base: 16px;
+      --line-height-base: 1.6;
+
+      /* --- Abstände, Radien & Schatten --- */
+      --container-max-width: 1200px;
+      --section-padding-y: clamp(3.5rem, 6vw, 5.5rem);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-pill: 9999px;
+
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 4px 10px -6px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 20px 35px -10px rgba(15, 23, 42, 0.12);
+
+      /* --- Übergänge --- */
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* =====================================================================
+       2. BASIS-RESET & BARRIEREFREIHEIT
+       ===================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: var(--font-size-base);
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      font-family: var(--font-family-base);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      line-height: var(--line-height-base);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    /* Sichtbarer Fokus-Rahmen für Tastaturnavigation (Barrierefreiheit) */
+    :focus-visible {
+      outline: 3px solid var(--swkk-blue);
+      outline-offset: 3px;
+    }
+
+    /* Skip-Link für Screenreader & Tastaturnutzer */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: var(--color-dark);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      z-index: 9999;
+      transition: top var(--transition-fast);
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: var(--container-max-width);
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* Allgemeine Sektions-Typografie */
+    .section {
+      padding: var(--section-padding-y) 0;
+    }
+
+    .section--alt {
+      background-color: var(--color-surface);
+    }
+
+    .section-header {
+      max-width: 720px;
+      margin-bottom: 2.75rem;
+    }
+
+    .section-header--center {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--swkk-blue);
+      margin-bottom: 0.65rem;
+    }
+
+    .section-eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: var(--gradient-rainbow);
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--color-text);
+      margin-bottom: 0.85rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-align: center;
+    }
+
+    .btn--primary {
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(0, 123, 196, 0.28);
+    }
+
+    .btn--primary:hover {
+      background-color: var(--color-primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn--rainbow {
+      border: none;
+      padding: calc(0.85rem + 2px) calc(1.5rem + 2px);
+      background-image: var(--gradient-rainbow);
+      background-origin: border-box;
+      background-clip: border-box;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      color: #FFFFFF;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn--rainbow:hover {
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+    }
+
+    .btn--outline {
+      background-color: transparent;
+      border-color: var(--color-border);
+      color: var(--color-text);
+    }
+
+    .btn--outline:hover {
+      border-color: var(--swkk-blue);
+      color: var(--swkk-blue);
+      background-color: rgba(0, 123, 196, 0.04);
+    }
+
+    /* =====================================================================
+       3. STICKY HEADER & NAVIGATION
+       ===================================================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Feiner Regenbogen-Streifen ganz oben am Header */
+    .rainbow-top-bar {
+      height: 5px;
+      width: 100%;
+      background: var(--gradient-rainbow);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 78px;
+      gap: 1.5rem;
+    }
+
+    /* Logo-Platzhalter Styling */
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+.logo-placeholder-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+
+
+    .logo-img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+
+
+
+
+    /* Desktop Navigation */
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      position: relative;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      padding: 0.4rem 0;
+      transition: color var(--transition-fast);
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 3px;
+      border-radius: var(--radius-pill);
+      background: var(--gradient-rainbow);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-normal);
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--swkk-blue);
+    }
+
+    .nav-link:hover::after,
+    .nav-link:focus-visible::after {
+      transform: scaleX(1);
+    }
+
+    /* Mobile Menu Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      cursor: pointer;
+    }
+
+    /* =====================================================================
+       4. HERO-SEKTION & VERBINDUNGSSUCHE
+       ===================================================================== */
+    .hero {
+      position: relative;
+      padding: clamp(3rem, 6vw, 5rem) 0 clamp(4rem, 7vw, 6rem);
+      background: var(--gradient-rainbow-soft);
+      overflow: hidden;
+    }
+
+    /* Dekorativer Regenbogen-Bogen im Hintergrund (inspiriert vom SWKK-Logo) */
+    .hero-rainbow-swoosh {
+      position: absolute;
+      top: -120px;
+      right: -10%;
+      width: 780px;
+      height: 480px;
+      border-radius: 50%;
+      border: 36px solid transparent;
+      background:
+        linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+        var(--gradient-rainbow) border-box;
+      opacity: 0.22;
+      transform: rotate(-14deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      padding: 0.4rem 0.95rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-badge-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--swkk-green);
+    }
+
+    .hero-title {
+      font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.15rem;
+      color: var(--color-text);
+    }
+
+    .hero-title span {
+      display: block;
+      background: var(--gradient-rainbow);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-text {
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+      margin-bottom: 2rem;
+      max-width: 560px;
+    }
+
+    .hero-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      list-style: none;
+    }
+
+    .hero-highlights li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    /* Fahrplanauskunft / Verbindungs-Schnellsuche Card */
+    .search-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--color-border);
+      overflow: hidden;
+    }
+
+    .search-card-header {
+      padding: 1.25rem 1.75rem;
+      background: var(--color-dark);
+      color: #FFFFFF;
+      position: relative;
+    }
+
+    .search-card-header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-rainbow);
+    }
+
+    .search-card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .search-form {
+      padding: 1.75rem;
+      display: grid;
+      gap: 1.15rem;
+    }
+
+    .form-row-swap {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.65rem;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 0.95rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--swkk-blue);
+      background-color: #FFFFFF;
+    }
+
+    .swap-btn {
+      width: 42px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+
+    .swap-btn:hover {
+      border-color: var(--swkk-blue);
+      color: var(--swkk-blue);
+      background: rgba(0, 123, 196, 0.06);
+    }
+
+    .form-row-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    /* Demo-Ergebnisbox der Verbindungssuche */
+    .search-results {
+      margin-top: 0.5rem;
+      padding: 1.15rem;
+      background-color: var(--color-surface-alt);
+      border-radius: var(--radius-md);
+      border-left: 5px solid var(--swkk-green);
+      display: none;
+    }
+
+    .search-results.is-visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .result-item {
+      background: var(--color-surface);
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      margin-top: 0.65rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .line-pill {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    /* =====================================================================
+       5. LINIEN & NETZ (MIT FILTERFUNKTION)
+       ===================================================================== */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-border);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--swkk-blue);
+      color: var(--swkk-blue);
+    }
+
+    .filter-btn.is-active {
+      background-color: var(--color-dark);
+      border-color: var(--color-dark);
+      color: #FFFFFF;
+    }
+
+    .lines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .line-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.15rem;
+      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+      border-top: 5px solid var(--line-color, var(--swkk-blue));
+    }
+
+    .line-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .line-card.is-hidden {
+      display: none;
+    }
+
+    .line-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .line-number {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      background-color: var(--line-color, var(--swkk-blue));
+      padding: 0.3rem 0.85rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .line-category {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      background: var(--color-surface-alt);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .line-route {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.35rem;
+    }
+
+    .line-stops {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    .line-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    /* =====================================================================
+       6. TICKETS & TARIFE
+       ===================================================================== */
+    .tickets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.75rem;
+      align-items: stretch;
+    }
+
+    .ticket-card {
+      position: relative;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    }
+
+    .ticket-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .ticket-card--featured {
+      border: 2px solid transparent;
+      background-image:
+        linear-gradient(var(--color-surface), var(--color-surface)),
+        var(--gradient-rainbow);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      box-shadow: var(--shadow-md);
+    }
+
+    .ticket-ribbon {
+      position: absolute;
+      top: -13px;
+      right: 1.5rem;
+      background: var(--gradient-rainbow);
+      color: #FFFFFF;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.3rem 0.9rem;
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ticket-accent-bar {
+      width: 48px;
+      height: 6px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 1.15rem;
+    }
+
+    .ticket-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+
+    .ticket-desc {
+      font-size: 0.92rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .ticket-price {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--color-text);
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+
+    .ticket-price small {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+
+    .ticket-features {
+      list-style: none;
+      margin: 1.5rem 0 2rem;
+      display: grid;
+      gap: 0.65rem;
+      font-size: 0.92rem;
+    }
+
+    .ticket-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+    }
+
+    .ticket-features li::before {
+      content: "✓";
+      font-weight: 800;
+      color: var(--swkk-green);
+    }
+
+    /* =====================================================================
+       7. AKTUELLES & VERKEHRSMELDUNGEN
+       ===================================================================== */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .news-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.65rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-badge--construction {
+      background-color: rgba(243, 146, 0, 0.16);
+      color: #B45309;
+    }
+
+    .status-badge--new {
+      background-color: rgba(0, 141, 54, 0.14);
+      color: #065F46;
+    }
+
+    .status-badge--service {
+      background-color: rgba(0, 123, 196, 0.14);
+      color: #075985;
+    }
+
+    .news-date {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .news-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .news-excerpt {
+      font-size: 0.94rem;
+      color: var(--color-text-muted);
+    }
+
+    .news-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--swkk-blue);
+      margin-top: 0.5rem;
+    }
+
+    .news-link:hover {
+      text-decoration: underline;
+    }
+
+    /* =====================================================================
+       8. NACHHALTIGKEIT & FLOTTE ("GEMEINSAM FÜR EIN GRÜNES KEMPEN")
+       ===================================================================== */
+    .sustainability-box {
+      background: var(--color-dark);
+      color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: clamp(2rem, 5vw, 3.75rem);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sustainability-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      background: var(--gradient-rainbow);
+    }
+
+    .sustainability-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .sustainability-title {
+      font-size: clamp(1.75rem, 3vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .sustainability-text {
+      color: #CBD5E1;
+      font-size: 1.05rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.15rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.35rem;
+      color: var(--swkk-yellow);
+    }
+
+    .stat-card:nth-child(2) .stat-value {
+      color: #4ADE80;
+    }
+
+    .stat-card:nth-child(3) .stat-value {
+      color: #38BDF8;
+    }
+
+    .stat-card:nth-child(4) .stat-value {
+      color: #FB923C;
+    }
+
+    .stat-label {
+      font-size: 0.88rem;
+      color: #E2E8F0;
+    }
+
+    /* =====================================================================
+       9. FOOTER
+       ===================================================================== */
+    .site-footer {
+      background-color: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding-top: 3.5rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr 1fr;
+      gap: 2.25rem;
+      padding-bottom: 3rem;
+    }
+
+    .footer-heading {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .footer-list {
+      list-style: none;
+      display: grid;
+      gap: 0.6rem;
+      font-size: 0.92rem;
+      color: var(--color-text-muted);
+    }
+
+    .footer-list a:hover {
+      color: var(--swkk-blue);
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--color-border);
+      padding: 1.25rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+    }
+
+    .rainbow-bottom-bar {
+      height: 8px;
+      width: 100%;
+      background: var(--gradient-rainbow);
+    }
+
+    /* =====================================================================
+       10. MODAL / HINWEISFENSTER (BARRIEREFREI, KEIN alert())
+       ===================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 2000;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      max-width: 520px;
+      width: 100%;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-lg);
+      border-top: 6px solid var(--swkk-blue);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-close {
+      background: var(--color-surface-alt);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =====================================================================
+       11. RESPONSIVE DESIGN (TABLET & SMARTPHONE)
+       ===================================================================== */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .sustainability-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .main-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: var(--shadow-md);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1.25rem;
+        display: none;
+      }
+
+      .main-nav.is-open {
+        display: flex;
+      }
+
+      .nav-list {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.85rem;
+        margin-bottom: 1rem;
+      }
+
+      .form-row-swap {
+        grid-template-columns: 1fr;
+      }
+
+      .swap-btn {
+        width: 100%;
+      }
+
+      .form-row-2col {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barrierefreier Sprunglink direkt zum Hauptinhalt -->
+  <a href="#main-content" class="skip-link">Direkt zum Hauptinhalt springen</a>
+
+  <!-- =====================================================================
+       1. STICKY HEADER & NAVIGATION
+       ===================================================================== -->
+  <header class="site-header">
+    <!-- Regenbogen-Akzentstreifen oben -->
+    <div class="rainbow-top-bar" aria-hidden="true"></div>
+
+    <div class="container header-inner">
+      <!-- LOGO-PLATZHALTER (HEADER):
+           Ersetze unten src="DEIN-LOGO-LINK.svg" durch den echten Pfad zu deiner SVG-Datei! -->
+<a href="#" class="logo-link" aria-label="SWKK Startseite – Wir bewegen Kempen!">
+        <img
+          src="https://raw.githubusercontent.com/TechTimes-Official/SWKK/8a679a5cfebbec443485c128956f4ebf06e02722/SWKK-Logo-Entwurf.svg"
+          alt="SWKK – Wir bewegen Kempen!"
+          class="logo-img"
+        />
+      </a>
+
+      <!-- Mobile Navigation Toggle -->
+      <button
+        type="button"
+        class="mobile-menu-btn"
+        id="mobileMenuToggle"
+        aria-expanded="false"
+        aria-controls="mainNavigation"
+        aria-label="Hauptmenü öffnen oder schließen"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Hauptnavigation -->
+      <nav class="main-nav" id="mainNavigation" aria-label="Hauptnavigation">
+        <ul class="nav-list">
+          <li><a href="#linien" class="nav-link">Linien &amp; Fahrpläne</a></li>
+          <li><a href="#tickets" class="nav-link">Tickets &amp; Tarife</a></li>
+          <li><a href="#aktuelles" class="nav-link">Aktuelles</a></li>
+          <li><a href="#nachhaltigkeit" class="nav-link">Über uns</a></li>
+          <li><a href="#kontakt" class="nav-link">Kontakt</a></li>
+        </ul>
+        <a href="#verbindungssuche" class="btn btn--primary">Fahrplanauskunft</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- =====================================================================
+         2. HERO-SEKTION MIT SLOGAN & INTERAKTIVER VERBINDUNGSSUCHE
+         ===================================================================== -->
+    <section class="hero" id="verbindungssuche" aria-labelledby="hero-heading">
+      <!-- Dekorativer Regenbogen-Bogen -->
+      <div class="hero-rainbow-swoosh" aria-hidden="true"></div>
+
+      <div class="container hero-grid">
+        <!-- Linke Spalte: Slogan & Einleitung -->
+        <div>
+          <div class="hero-badge">
+            <span class="hero-badge-dot" aria-hidden="true"></span>
+            <span>SWKK</span>
+          </div>
+
+          <h1 id="hero-heading" class="hero-title">
+            <span>Wir bewegen Kempen!</span>
+            Sicher & bunt an euer Ziel.
+          </h1>
+
+          <p class="hero-text">
+            Ob zur Arbeit, in die historische Altstadt, zum Bahnhof oder nach St. Hubert und Tönisberg:
+            Mit den modernen Bussen der SWKK sind Sie im gesamten Stadtgebiet zuverlässig und nachhaltig unterwegs.
+          </p>
+
+        </div>
+
+        <!-- Rechte Spalte: Interaktive Verbindungs-Schnellsuche -->
+        <div class="search-card" role="region" aria-label="Verbindungs-Schnellsuche">
+          <div class="search-card-header">
+            <h2 class="search-card-title">
+              <span aria-hidden="true">Verbindungs-Schnellsuche
+            </h2>
+          </div>
+
+          <form class="search-form" id="connectionForm">
+            <div class="form-row-swap">
+              <div class="form-group">
+                <label for="startStop" class="form-label">Start-Haltestelle</label>
+                <input
+                  type="text"
+                  id="startStop"
+                  class="form-control"
+                  list="kempenStops"
+                  value="Kempen Bahnhof"
+                  placeholder="z. B. Kempen Bahnhof"
+                  required
+                />
+              </div>
+
+              <button
+                type="button"
+                class="swap-btn"
+                id="swapStopsBtn"
+                title="Start und Ziel tauschen"
+                aria-label="Start und Ziel tauschen"
+              >
+                ⇄
+              </button>
+
+              <div class="form-group">
+                <label for="endStop" class="form-label">Ziel-Haltestelle</label>
+                <input
+                  type="text"
+                  id="endStop"
+                  class="form-control"
+                  list="kempenStops"
+                  value="St. Hubert Markt"
+                  placeholder="z. B. St. Hubert Markt"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Vorschläge für typische Haltestellen in Kempen -->
+            <datalist id="kempenStops">
+              <option value="Kempen Bahnhof"></option>
+              <option value="Kempen Arnoldstraße / Altstadt"></option>
+              <option value="Hospital zum Heiligen Geist"></option>
+              <option value="St. Hubert Markt"></option>
+              <option value="Tönisberg Kirchplatz"></option>
+              <option value="Schmalbroich Kirche"></option>
+              <option value="Industriegebiet Ost"></option>
+              <option value="aqua-sol Freizeitbad"></option>
+            </datalist>
+
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="travelDate" class="form-label">Datum</label>
+                <input type="date" id="travelDate" class="form-control" required />
+              </div>
+
+              <div class="form-group">
+                <label for="travelTime" class="form-label">Abfahrt (Uhrzeit)</label>
+                <input type="time" id="travelTime" class="form-control" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--rainbow" style="width: 100%;">
+              Verbindung suchen
+            </button>
+
+            <!-- Dynamische Ergebnis-Anzeige (Demo) -->
+            <div
+              id="searchResults"
+              class="search-results"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         3. LINIEN & NETZ (MIT INTERAKTIVEM KATEGORIE-FILTER)
+         ===================================================================== -->
+    <section class="section section--alt" id="linien" aria-labelledby="linien-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Liniennetz &amp; Fahrpläne</span>
+          <h2 id="linien-heading" class="section-title">Unsere Linien für Kempen und Umgebung</h2>
+          <p class="section-subtitle">
+            Wählen Sie eine Kategorie, um Stadtbusse, Schnellbusse oder unseren flexiblen On-Demand-Shuttle zu filtern.
+          </p>
+        </div>
+
+        <!-- Filter-Buttons -->
+        <div class="filter-bar" role="group" aria-label="Buslinien nach Kategorie filtern">
+          <button type="button" class="filter-btn is-active" data-filter="all">Alle Linien (6)</button>
+          <button type="button" class="filter-btn" data-filter="stadtbus">Stadtbusse</button>
+          <button type="button" class="filter-btn" data-filter="schnellbus">Schnellbusse</button>
+        </div>
+
+        <!-- Karten-Grid -->
+        <div class="lines-grid" id="linesGrid">
+          <!-- Linie 1 -->
+          <article class="line-card" data-category="stadtbus" style="--line-color: var(--swkk-red);">
+            <div>
+              <div class="line-card-top">
+                <span class="line-number">Linie 062</span>
+                <span class="line-category">Stadtbus</span>
+              </div>
+              <h3 class="line-route">Kempen Bf – Altstadt – St. Hubert</h3>
+              <p class="line-stops">
+                Über Arnoldstraße, Hospital zum Heiligen Geist, Kamperlings und St. Hubert Markt.
+              </p>
+            </div>
+            <div class="line-meta">
+              <span>⏱ Alle 20 Min.</span>
+              <a href="#verbindungssuche" class="news-link">Fahrplan →</a>
+            </div>
+          </article>
+
+          <!-- Linie 2 -->
+          <article class="line-card" data-category="stadtbus" style="--line-color: var(--swkk-orange);">
+            <div>
+              <div class="line-card-top">
+                <span class="line-number">Linie 061</span>
+                <span class="line-category">Stadtbus</span>
+              </div>
+              <h3 class="line-route">Kempen Bf – Hagelkreuz – aqua-sol</h3>
+              <p class="line-stops">
+                Über Berliner Allee, Schulzentrum, Freizeitbad aqua-sol und Schmalbroich.
+              </p>
+            </div>
+            <div class="line-meta">
+              <span>⏱ Alle 30 Min.</span>
+              <a href="#verbindungssuche" class="news-link">Fahrplan →</a>
+            </div>
+          </article>
+
+          <!-- Linie 3 -->
+          <article class="line-card" data-category="schnellbus" style="--line-color: var(--swkk-green);">
+            <div>
+              <div class="line-card-top">
+                <span class="line-number">SB 86</span>
+                <span class="line-category">Schnellbus</span>
+              </div>
+              <h3 class="line-route">Kempen Bf – Tönisberg – Krefeld Hbf</h3>
+              <p class="line-stops">
+                Direkte Schnellverbindung ohne Umstieg über St. Hubert und Tönisberg Kirchplatz.
+              </p>
+            </div>
+            <div class="line-meta">
+              <span>⏱ Alle 30 Min.</span>
+              <a href="#verbindungssuche" class="news-link">Fahrplan →</a>
+            </div>
+          </article>
+
+          <!-- Linie 4 -->
+          <article class="line-card" data-category="schnellbus" style="--line-color: var(--swkk-teal);">
+            <div>
+              <div class="line-card-top">
+                <span class="line-number">SB 88</span>
+                <span class="line-category">Schnellbus</span>
+              </div>
+              <h3 class="line-route">Kempen Bf – Industriegebiet Ost – Viersen</h3>
+              <p class="line-stops">
+                Optimiert für Pendlerinnen und Pendler mit Anschluss an den Regionalverkehr.
+              </p>
+            </div>
+            <div class="line-meta">
+              <span>⏱ Alle 30 Min.</span>
+              <a href="#verbindungssuche" class="news-link">Fahrplan →</a>
+            </div>
+          </article>
+
+    </section>
+
+    <!-- =====================================================================
+         4. TICKETS & TARIFE
+         ===================================================================== -->
+    <section class="section" id="tickets" aria-labelledby="tickets-heading">
+      <div class="container">
+        <div class="section-header section-header--center">
+          <span class="section-eyebrow">Tickets &amp; Tarife</span>
+          <h2 id="tickets-heading" class="section-title">Einfach einsteigen &amp; losfahren</h2>
+          <p class="section-subtitle">
+            Transparente Tarife im Verkehrsverbund – direkt beim Fahrpersonal, am Automaten oder bequem digital per Smartphone.
+          </p>
+        </div>
+
+        <div class="tickets-grid">
+          <!-- Tarif 1: Einzelticket -->
+          <article class="ticket-card">
+            <div>
+              <div class="ticket-accent-bar" style="background-color: var(--swkk-orange);"></div>
+              <h3 class="ticket-name">EinzelTicket Kempen</h3>
+              <p class="ticket-desc">Ideal für spontane Fahrten innerhalb des gesamten Stadtgebiets Kempen.</p>
+              <div class="ticket-price">
+                3,20 € <small>/ Fahrt</small>
+              </div>
+              <ul class="ticket-features">
+                <li>Gültig für 90 Minuten inkl. Umstieg</li>
+                <li>Kinder unter 6 Jahren fahren kostenlos</li>
+                <li>Direkt im Bus oder per App erhältlich</li>
+              </ul>
+            </div>
+            <button
+              type="button"
+              class="btn btn--outline"
+              data-modal-title="EinzelTicket Kempen"
+              data-modal-text="Das EinzelTicket (Preisstufe A) erhalten Sie bargeldlos direkt beim Einstieg in allen SWKK-Bussen sowie in der SWKK-Mobil-App."
+            >
+              Ticket-Details
+            </button>
+          </article>
+
+          <!-- Tarif 2: Deutschlandticket (Highlight mit Regenbogen-Rahmen) -->
+          <article class="ticket-card ticket-card--featured">
+            <span class="ticket-ribbon">Beliebteste Wahl</span>
+            <div>
+              <div class="ticket-accent-bar" style="background: var(--gradient-rainbow);"></div>
+              <h3 class="ticket-name">DeutschlandTicket SWKK</h3>
+              <p class="ticket-desc">Bundesweit im gesamten Nahverkehr mobil – inkl. aller SWKK-Linien.</p>
+              <div class="ticket-price">
+                58,00 € <small>/ Monat</small>
+              </div>
+              <ul class="ticket-features">
+                <li>Unbegrenzte Fahrten in Kempen &amp; ganz Deutschland</li>
+                <li>Monatlich kündbares Chipkarten- oder Handy-Abo</li>
+                <li>Auch als vergünstigtes JobTicket verfügbar</li>
+              </ul>
+            </div>
+            <button
+              type="button"
+              class="btn btn--rainbow"
+              data-modal-title="DeutschlandTicket bei der SWKK"
+              data-modal-text="Bestellen Sie Ihr DeutschlandTicket bequem im SWKK-Kundencenter am Bahnhof Kempen oder online als digitales Ticket."
+            >
+              Jetzt informieren
+            </button>
+          </article>
+
+          <!-- Tarif 3: 24-Stunden-Ticket -->
+          <article class="ticket-card">
+            <div>
+              <div class="ticket-accent-bar" style="background-color: var(--swkk-teal);"></div>
+              <h3 class="ticket-name">24-Stunden-Ticket</h3>
+              <p class="ticket-desc">Perfekt für Ausflüge, Shopping in der Altstadt oder Besuch aus der Region.</p>
+              <div class="ticket-price">
+                8,40 € <small>/ 24 Std.</small>
+              </div>
+              <ul class="ticket-features">
+                <li>24 Stunden ab Entwertung beliebig oft fahren</li>
+                <li>Optional als Gruppen-Ticket für bis zu 5 Personen</li>
+                <li>Kostenlose Fahrradmitnahme ab 19 Uhr</li>
+              </ul>
+            </div>
+            <button
+              type="button"
+              class="btn btn--outline"
+              data-modal-title="24-Stunden-Ticket"
+              data-modal-text="Mit dem 24-Stunden-Ticket sind Sie einen ganzen Tag lang flexibel in Kempen und den angeschlossenen Ortsteilen unterwegs."
+            >
+              Ticket-Details
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         5. AKTUELLES & VERKEHRSMELDUNGEN
+         ===================================================================== -->
+    <section class="section section--alt" id="aktuelles" aria-labelledby="aktuelles-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-eyebrow">Aktuelles &amp; Meldungen</span>
+          <h2 id="aktuelles-heading" class="section-title">Neues aus dem SWKK-Liniennetz</h2>
+          <p class="section-subtitle">
+            Bleiben Sie informiert über Fahrplananpassungen, Baustellenumleitungen und neue Mobilitätsangebote in Kempen.
+          </p>
+        </div>
+
+        <div class="news-grid">
+          <!-- Meldung 1: Baustelle -->
+          <article class="news-card">
+            <div>
+              <div class="news-meta">
+                <span class="status-badge status-badge--construction">Baustelle</span>
+                <time class="news-date" datetime="2026-11-15">15. November 2026</time>
+              </div>
+              <h3 class="news-title">Umleitung auf der Linie 065 im Bereich St. Hubert</h3>
+              <p class="news-excerpt">
+                Aufgrund von Kanalarbeiten wird die Haltestelle „Aldekerker Straße“ vorübergehend um 150 Meter in Richtung Ortsmitte verlegt.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="news-link"
+              style="background:none; border:none; padding:0; cursor:pointer;"
+              data-modal-title="Baustelleninfo Linie 065"
+              data-modal-text="Die Ersatzhaltestelle ist barrierefrei ausgebaut und ausgeschildert. Die Fahrzeiten ändern sich um maximal 2 Minuten."
+            >
+              Details zur Umleitung lesen →
+            </button>
+          </article>
+
+          <!-- Meldung 2: Neu -->
+          <article class="news-card">
+            <div>
+              <div class="news-meta">
+                <span class="status-badge status-badge--new">Neu</span>
+                <time class="news-date" datetime="2026-11-10">10. November 2026</time>
+              </div>
+              <h3 class="news-title">Vier neue Elektrobusse im Regenbogen-Design im Einsatz</h3>
+              <p class="news-excerpt">
+                Leise, lokal emissionsfrei und mit WLAN &amp; USB-Ladebuchsen ausgestattet: Unsere neuen E-Busse verstärken ab sofort den Stadtverkehr.
+              </p>
+            </div>
+            <a href="#nachhaltigkeit" class="news-link">Mehr über unsere E-Flotte →</a>
+          </article>
+
+          <!-- Meldung 3: Service -->
+          <article class="news-card">
+            <div>
+              <div class="news-meta">
+                <span class="status-badge status-badge--service">Service</span>
+                <time class="news-date" datetime="2026-11-04">04. November 2026</time>
+              </div>
+              <h3 class="news-title">Erweiterte Öffnungszeiten im SWKK-Kundencenter</h3>
+              <p class="news-excerpt">
+                Persönliche Beratung zu Abos, SchülerTickets und dem On-Demand-Shuttle jetzt auch donnerstags durchgehend bis 18:30 Uhr.
+              </p>
+            </div>
+            <a href="#kontakt" class="news-link">Kontakt &amp; Öffnungszeiten →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         6. NACHHALTIGKEIT & FLOTTE ("GEMEINSAM FÜR EIN GRÜNES KEMPEN")
+         ===================================================================== -->
+    <section class="section" id="nachhaltigkeit" aria-labelledby="sustainability-heading">
+      <div class="container">
+        <div class="sustainability-box">
+          <div class="sustainability-grid">
+            <div>
+              <span class="section-eyebrow" style="color: #7DD3FC;">Nachhaltigkeit &amp; Zukunft</span>
+              <h2 id="sustainability-heading" class="sustainability-title">
+                Gemeinsam für ein grünes Kempen
+              </h2>
+              <p class="sustainability-text">
+                Als kommunales Verkehrsunternehmen tragen wir Verantwortung für Lebensqualität und Klimaschutz am Niederrhein.
+                Deshalb stellen wir unsere Busflotte schrittweise auf 100 % Ökostrom um – geladen direkt auf unserem Betriebshof in Kempen.
+              </p>
+              <a href="#linien" class="btn btn--rainbow">Unser Liniennetz entdecken</a>
+            </div>
+
+            <div class="stats-grid" aria-label="Kennzahlen zur Nachhaltigkeit der SWKK">
+              <div class="stat-card">
+                <div class="stat-value">100 %</div>
+                <div class="stat-label">Grüner Ökostrom für unsere E-Busse</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">-420 t</div>
+                <div class="stat-label">CO₂-Einsparung pro Jahr in Kempen</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">100 %</div>
+                <div class="stat-label">Niederflur-Flotte mit Rampen</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">2,4 Mio.</div>
+                <div class="stat-label">Fahrgäste jährlich sicher bewegt</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       7. FOOTER MIT LOGO-PLATZHALTER, KONTAKT & REGENBOGEN-ABSCHLUSS
+       ===================================================================== -->
+  <footer class="site-footer" id="kontakt">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Spalte 1: Logo-Platzhalter & Leitbild -->
+        <div>
+          <!-- LOGO-PLATZHALTER (FOOTER):
+               Ersetze unten src="DEIN-LOGO-LINK.svg" durch den echten Pfad zu deiner SVG-Datei! -->
+<a href="#" class="logo-link" aria-label="SWKK Startseite">
+            <img
+              src="https://raw.githubusercontent.com/TechTimes-Official/SWKK/8a679a5cfebbec443485c128956f4ebf06e02722/SWKK-Logo-Entwurf.svg"
+              alt="SWKK – Wir bewegen Kempen!"
+              class="logo-img"
+            />
+          </a>
+
+          <p style="margin-top: 1rem; font-size: 0.92rem; color: var(--color-text-muted); max-width: 300px;">
+            <strong>SWKK – Wir bewegen Kempen!</strong><br />
+            Ihr verlässlicher Partner für modernen, sicheren und nachhaltigen Nahverkehr in Kempen.
+          </p>
+        </div>
+
+        <!-- Spalte 2: Kontakt & Kundencenter -->
+        <div>
+          <h3 class="footer-heading">Kontakt &amp; Kundencenter</h3>
+          <ul class="footer-list">
+            <li>SWKK Verkehrsbetriebe GmbH</li>
+            <li>Bahnhofstraße 12, 47906 Kempen</li>
+            <li>Tel.: <a href="tel:+49215200000">02152 / 00 00-0</a></li>
+            <li>E-Mail: <a href="mailto:info@swkk-kempen.de">info@swkk-kempen.de</a></li>
+            <li>Mo–Fr: 08:00 – 18:00 Uhr</li>
+          </ul>
+        </div>
+
+        <!-- Spalte 3: Schnelllinks -->
+        <div>
+          <h3 class="footer-heading">Schnelllinks</h3>
+          <ul class="footer-list">
+            <li><a href="#verbindungssuche">Fahrplanauskunft</a></li>
+            <li><a href="#linien">Liniennetzplan</a></li>
+            <li><a href="#tickets">Tickets &amp; DeutschlandTicket</a></li>
+            <li><a href="#aktuelles">Aktuelle Verkehrsmeldungen</a></li>
+            <li><a href="#nachhaltigkeit">E-Mobilität &amp; Flotte</a></li>
+          </ul>
+        </div>
+
+        <!-- Spalte 4: Rechtliches & Service -->
+        <div>
+          <h3 class="footer-heading">Rechtliches &amp; Service</h3>
+          <ul class="footer-list">
+            <li>
+              <a href="#impressum" data-modal-title="Impressum (Platzhalter)" data-modal-text="SWKK – Stadtwerke Kempen Verkehrsbetriebe • Bahnhofstraße 12 • 47906 Kempen. Hier kannst du deine vollständigen Impressumsangaben hinterlegen.">
+                Impressum
+              </a>
+            </li>
+            <li>
+              <a href="#datenschutz" data-modal-title="Datenschutzhinweise (Platzhalter)" data-modal-text="Der Schutz Ihrer personenbezogenen Daten hat für die SWKK höchste Priorität. Hier kannst du deine Datenschutzerklärung verlinken.">
+                Datenschutz
+              </a>
+            </li>
+            <li>
+              <a href="#barrierefreiheit" data-modal-title="Erklärung zur Barrierefreiheit" data-modal-text="Diese Website wurde nach WCAG-Richtlinien mit klaren Kontrasten, Tastaturbedienbarkeit und ARIA-Labels entwickelt.">
+                Barrierefreiheit
+              </a>
+            </li>
+            <li><a href="#tickets">Beförderungsbedingungen</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="currentYear">2026</span> SWKK – Wir bewegen Kempen! Alle Rechte vorbehalten.</span>
+        <span>Entwickelt für nachhaltige Mobilität am Niederrhein</span>
+      </div>
+    </div>
+
+    <!-- Regenbogen-Abschlussstreifen -->
+    <div class="rainbow-bottom-bar" aria-hidden="true"></div>
+  </footer>
+
+  <!-- =====================================================================
+       BARRIEREFREIES INFO-MODAL (ERSETZT alert())
+       ===================================================================== -->
+  <div
+    class="modal-backdrop"
+    id="infoModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTitle" style="font-size: 1.25rem; font-weight: 800;">Information</h3>
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Dialog schließen">✕</button>
+      </div>
+      <p id="modalBody" style="color: var(--color-text-muted); margin-bottom: 1.5rem;"></p>
+      <button type="button" class="btn btn--primary" id="confirmModalBtn" style="width: 100%;">Verstanden</button>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       JAVASCRIPT (VANILLA JS – INTERAKTIONEN, FILTER & VERBINDUNGSSUCHE)
+       ===================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Aktuelles Jahr im Footer setzen
+      const yearSpan = document.getElementById('currentYear');
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+
+      // 2. Datum und Uhrzeit in der Verbindungssuche mit aktuellen Werten vorbelegen
+      const dateInput = document.getElementById('travelDate');
+      const timeInput = document.getElementById('travelTime');
+      const now = new Date();
+      if (dateInput) {
+        dateInput.value = now.toISOString().split('T')[0];
+      }
+      if (timeInput) {
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeInput.value = `${hours}:${minutes}`;
+      }
+
+      // 3. Mobile Navigation Toggle
+      const mobileMenuBtn = document.getElementById('mobileMenuToggle');
+      const mainNav = document.getElementById('mainNavigation');
+
+      if (mobileMenuBtn && mainNav) {
+        mobileMenuBtn.addEventListener('click', () => {
+          const isOpen = mainNav.classList.toggle('is-open');
+          mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        // Menü schließen, wenn ein Link angeklickt wird
+        mainNav.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            mainNav.classList.remove('is-open');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      // 4. Start- und Ziel-Haltestelle tauschen
+      const swapBtn = document.getElementById('swapStopsBtn');
+      const startInput = document.getElementById('startStop');
+      const endInput = document.getElementById('endStop');
+
+      if (swapBtn && startInput && endInput) {
+        swapBtn.addEventListener('click', () => {
+          const temp = startInput.value;
+          startInput.value = endInput.value;
+          endInput.value = temp;
+        });
+      }
+
+      // 5. Interaktive Demo-Verbindungssuche
+      const connectionForm = document.getElementById('connectionForm');
+      const searchResults = document.getElementById('searchResults');
+
+      if (connectionForm && searchResults) {
+        connectionForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const start = startInput.value.trim() || 'Kempen Bahnhof';
+          const end = endInput.value.trim() || 'St. Hubert Markt';
+          const timeStr = timeInput.value || '12:00';
+
+          // Zwei realistische Beispielverbindungen ab gewählter Uhrzeit berechnen
+          const [h, m] = timeStr.split(':').map(Number);
+          const dep1 = new Date(2026, 0, 1, h, m + 4);
+          const arr1 = new Date(2026, 0, 1, h, m + 16);
+          const dep2 = new Date(2026, 0, 1, h, m + 24);
+          const arr2 = new Date(2026, 0, 1, h, m + 36);
+
+          const fmt = (d) =>
+            `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+          searchResults.innerHTML = `
+            <div style="font-weight: 700; font-size: 0.92rem; color: var(--color-text);">
+              Nächste Verbindungen: ${escapeHTML(start)} → ${escapeHTML(end)}
+            </div>
+            <div class="result-item">
+              <div>
+                <span class="line-pill" style="background-color: var(--swkk-red);">Linie 065</span>
+                <strong style="margin-left: 0.4rem;">${fmt(dep1)} – ${fmt(arr1)} Uhr</strong>
+                <div style="font-size: 0.82rem; color: var(--color-text-muted); margin-top: 0.2rem;">
+                  Direktfahrt (12 Min.) • ⚡ E-Bus • Barrierefrei
+                </div>
+              </div>
+              <span style="color: var(--swkk-green); font-weight: 700; font-size: 0.85rem;">● Pünktlich</span>
+            </div>
+            <div class="result-item">
+              <div>
+                <span class="line-pill" style="background-color: var(--swkk-green);">SB 87</span>
+                <strong style="margin-left: 0.4rem;">${fmt(dep2)} – ${fmt(arr2)} Uhr</strong>
+                <div style="font-size: 0.82rem; color: var(--color-text-muted); margin-top: 0.2rem;">
+                  Direktfahrt (12 Min.) • Barrierefrei
+                </div>
+              </div>
+              <span style="color: var(--swkk-green); font-weight: 700; font-size: 0.85rem;">● Pünktlich</span>
+            </div>
+          `;
+          searchResults.classList.add('is-visible');
+        });
+      }
+
+      // 6. Kategorie-Filter für Linien & Netz
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const lineCards = document.querySelectorAll('.line-card');
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach((b) => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          const filter = btn.getAttribute('data-filter');
+          lineCards.forEach((card) => {
+            const category = card.getAttribute('data-category');
+            if (filter === 'all' || category === filter) {
+              card.classList.remove('is-hidden');
+            } else {
+              card.classList.add('is-hidden');
+            }
+          });
+        });
+      });
+
+      // 7. Barrierefreies Info-Modal (für Ticket-Details, Meldungen & Rechtliches)
+      const modal = document.getElementById('infoModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const confirmModalBtn = document.getElementById('confirmModalBtn');
+      let lastFocusedElement = null;
+
+      function openModal(title, text) {
+        lastFocusedElement = document.activeElement;
+        modalTitle.textContent = title;
+        modalBody.textContent = text;
+        modal.classList.add('is-open');
+        closeModalBtn.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove('is-open');
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+      }
+
+      document.querySelectorAll('[data-modal-title]').forEach((trigger) => {
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          openModal(
+            trigger.getAttribute('data-modal-title'),
+            trigger.getAttribute('data-modal-text')
+          );
+        });
+      });
+
+      if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+      if (confirmModalBtn) confirmModalBtn.addEventListener('click', closeModal);
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeModal();
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+          closeModal();
+        }
+      });
+
+      // Hilfsfunktion gegen XSS bei Benutzereingaben
+      function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+    });
+  </script>
+</body>
+</html>
